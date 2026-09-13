@@ -1,8 +1,9 @@
 # Tamatem Game Store — Frontend
 
-Next.js (App Router) + TypeScript frontend for the Tamatem Game Store: login,
-a paginated/filterable product grid, product details with a Buy button, and a
-purchase receipt page. Talks to the FastAPI backend in the sibling `backend/` repo.
+Next.js (App Router) + TypeScript frontend for the Tamatem Game Store: a landing
+page, login, a paginated/filterable product grid, product details with a Buy
+button, and a purchase receipt page. Talks to the FastAPI backend in the sibling
+`backend/` repo.
 
 ## Setup & run
 
@@ -30,20 +31,42 @@ npx tsc --noEmit             # type-check only
 ```
 src/
   app/
-    login/page.tsx              Login form
-    (protected)/layout.tsx      Auth guard + header/logout, shared by every route below
-    (protected)/products/page.tsx           Product grid, pagination, location filter
-    (protected)/products/[id]/page.tsx      Product detail + Buy button
-    (protected)/receipt/[orderId]/page.tsx  Purchase receipt
+    page.tsx / HomeCta.tsx        Landing page (auth-aware CTA)
+    login/                        Login page (redirects away if already signed in)
+    not-found.tsx / error.tsx     Branded 404 and global error boundary
+    icon.svg / opengraph-image.tsx  Favicon and social-share image
+    (protected)/layout.tsx        Auth guard + header/nav, shared by every route below
+    (protected)/products/                   Product grid, pagination, location filter
+    (protected)/products/[id]/              Product detail + Buy button
+    (protected)/receipt/[orderId]/          Purchase receipt
+  components/ui/    Shared design-system primitives (Button, Card, Badge, Alert, …)
   lib/
     api/        Typed fetch client — one function per backend endpoint
     auth/       AuthContext (token storage) + useRequireAuth guard hook
+    product-visuals.ts   Deterministic icon/gradient per product title
   types/        TypeScript types mirroring the backend's Pydantic schemas
 ```
 
 The `(protected)` route group is a layout, not a URL segment — `/products` still
 resolves to `/products`, but every page under it shares one auth check and one
 header instead of each page re-implementing the guard.
+
+## Design system
+
+- **Tokens** (`app/globals.css`): semantic CSS variables (`--background`,
+  `--surface`, `--stroke`, `--muted-foreground`, …) rather than raw color
+  utilities everywhere, plus `brand` (violet) and `accent` (amber) color scales
+  aliased from Tailwind's defaults — a deliberate two-color identity instead of a
+  single default blue. Dark mode follows `prefers-color-scheme` automatically;
+  there's no manual toggle to keep in sync.
+- **Primitives** (`components/ui/`): `Button`/`ButtonLink`, `Card`, `Badge`,
+  `Alert`, `Skeleton`, `Pagination`, `Logo` — every page composes these instead of
+  ad-hoc Tailwind classes, so spacing, radii, and color usage stay consistent
+  without a component-by-component review.
+- **Icons**: `lucide-react`. Product cards get a keyword-matched icon and gradient
+  per title (`lib/product-visuals.ts`) instead of a generic placeholder — there
+  are no real product images in the dataset, so this gives each card a distinct,
+  intentional look with a stable hash-based fallback for unrecognized titles.
 
 ## Design decisions & assumptions
 
@@ -57,10 +80,15 @@ header instead of each page re-implementing the guard.
   read hits the same lint rule as above. `useSyncExternalStore` is the mechanism
   React actually provides for "a value that differs between server and client until
   hydration completes," and it needed no lint suppression.
-- **Client Components throughout**, not Server Components fetching on the server.
-  Every page needs the browser-held JWT to call the API, so there's no server-side
-  data to fetch — a Server Component here would just add a layer that immediately
-  hands off to the client anyway.
+- **Client Components throughout the authenticated app**, not Server Components
+  fetching on the server. Every protected page needs the browser-held JWT to call
+  the API, so there's no server-side data to fetch there. The landing page and
+  404/error pages *are* Server Components (for real `export const metadata`);
+  client-only pages set their tab title imperatively via `document.title` instead,
+  since a Client Component can't export `metadata`.
+- **Pagination and the location filter live in the URL** (`?page=2&location=SA`),
+  not component state — a refresh, a shared link, or the browser back/forward
+  buttons all land on the same view instead of silently resetting to page 1.
 - **`localStorage`, not an httpOnly cookie**, for the token. Simpler for a
   same-origin-in-dev, JSON-API backend with no server-rendered authenticated pages;
   a cookie set by the backend would be the next step for production-grade XSS
@@ -71,13 +99,18 @@ header instead of each page re-implementing the guard.
   just-created order through client-side state/sessionStorage. Slightly more
   network calls, but it means a refresh or a direct link to a receipt always works,
   with meaningfully less code and no SSR/hydration edge cases to reason about.
+- **No flag emoji for JO/SA.** Windows has known inconsistencies rendering regional
+  indicator flag emoji (some configurations show plain text instead of a flag) — a
+  `MapPin` icon plus the region name is used instead, which renders identically
+  everywhere.
 
 ## Verified
 
 Manually driven end-to-end with a headless browser against the real backend
-(Docker Compose): unauthenticated `/` → `/login` redirect, login, the product grid
-(paginated, location filter, distinct bold titles vs. lighter descriptions), a
-product detail page, a completed purchase landing on its receipt page, logout, and
-the auth guard correctly bouncing a logged-out direct visit to `/products` back to
-`/login` — zero console errors throughout. Also checked at a 390px mobile width.
-`npx tsc --noEmit`, `npm run lint`, and `npm run build` all pass clean.
+(Docker Compose), light and dark, at 390px (mobile), 768px (tablet), and 1280px
+(desktop): the landing page's auth-aware CTA, login (including redirecting an
+already-authenticated visit away from `/login`), the product grid with pagination
+and location filtering surviving a reload, a purchase landing on its receipt page,
+logout, the auth guard on every protected route, and the branded 404 page — zero
+console errors throughout. `npx tsc --noEmit`, `npm run lint`, and `npm run build`
+all pass clean.
