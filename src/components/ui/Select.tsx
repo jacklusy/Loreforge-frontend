@@ -15,6 +15,9 @@ interface SelectProps<T extends string> {
   label: string;
   icon?: React.ReactNode;
   className?: string;
+  /** `bare` drops the outline so the control can sit as one segment inside a
+   * grouped filter bar that draws the border itself. */
+  variant?: "outlined" | "bare";
 }
 
 /**
@@ -31,6 +34,7 @@ export function Select<T extends string>({
   label,
   icon,
   className,
+  variant = "outlined",
 }: SelectProps<T>) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(() =>
@@ -88,7 +92,11 @@ export function Select<T extends string>({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={label}
-        className="inline-flex w-full items-center gap-2 rounded-lg border border-stroke bg-surface px-3 py-2 text-sm font-medium transition-colors hover:border-stroke-strong"
+        className={`inline-flex w-full items-center gap-2 px-3 py-2 text-sm font-medium transition-colors ${
+          variant === "bare"
+            ? "rounded-lg text-muted-foreground hover:text-foreground"
+            : "rounded-xl border border-stroke bg-surface hover:border-stroke-strong"
+        }`}
       >
         {icon && <span className="text-muted-foreground">{icon}</span>}
         <span className="flex-1 truncate text-left">{selected?.label}</span>

@@ -124,47 +124,51 @@ function ProductsPageContent() {
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          {/* Uncontrolled and keyed on the committed query: typing doesn't push a
-              history entry per keystroke, and a back/forward navigation remounts
-              the field with the right value — no state to keep in sync. */}
-          <form
-            key={search}
-            onSubmit={(event) => {
-              event.preventDefault();
-              const value = new FormData(event.currentTarget).get("q");
-              navigate({ search: String(value ?? "").trim(), page: 1 });
-            }}
-            className="relative"
-          >
-            <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="search"
-              name="q"
-              defaultValue={search}
-              placeholder="Search items…"
-              aria-label="Search items"
-              className="w-full rounded-lg border border-stroke bg-surface py-2 pr-3 pl-9 text-sm outline-none placeholder:text-muted-foreground/70 focus:border-brand-500 sm:w-56"
-            />
-          </form>
+          {/* Search and sort share one bordered bar, as in the design, so the
+              controls that narrow the same list read as a single instrument. */}
+          <div className="flex divide-x divide-stroke rounded-xl border border-stroke bg-surface">
+            {/* Uncontrolled and keyed on the committed query: typing doesn't push
+                a history entry per keystroke, and a back/forward navigation
+                remounts the field with the right value — no state to sync. */}
+            <form
+              key={search}
+              onSubmit={(event) => {
+                event.preventDefault();
+                const value = new FormData(event.currentTarget).get("q");
+                navigate({ search: String(value ?? "").trim(), page: 1 });
+              }}
+              className="relative flex-1"
+            >
+              <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="search"
+                name="q"
+                defaultValue={search}
+                placeholder="Search items…"
+                aria-label="Search items"
+                className="w-full bg-transparent py-2 pr-3 pl-9 text-sm outline-none placeholder:text-muted-foreground/70 sm:w-52"
+              />
+            </form>
 
-          <div className="flex gap-2">
             <Select
               value={sort}
               options={SORT_OPTIONS}
               onChange={(value) => navigate({ sort: value, page: 1 })}
               label="Sort items"
               icon={<ArrowUpDown className="h-3.5 w-3.5" />}
-              className="flex-1 sm:w-48"
-            />
-            <Select
-              value={location}
-              options={LOCATION_OPTIONS}
-              onChange={(value) => navigate({ location: value, page: 1 })}
-              label="Filter by location"
-              icon={<MapPin className="h-3.5 w-3.5" />}
-              className="flex-1 sm:w-44"
+              variant="bare"
+              className="w-44 shrink-0"
             />
           </div>
+
+          <Select
+            value={location}
+            options={LOCATION_OPTIONS}
+            onChange={(value) => navigate({ location: value, page: 1 })}
+            label="Filter by location"
+            icon={<MapPin className="h-3.5 w-3.5" />}
+            className="sm:w-44"
+          />
         </div>
       </div>
 
