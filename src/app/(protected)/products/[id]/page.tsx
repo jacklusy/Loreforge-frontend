@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import useSWR from "swr";
 import { toast } from "sonner";
-import { ArrowLeft, Coins, MapPin, ShieldCheck, ShoppingCart, Truck } from "lucide-react";
+import { ArrowLeft, Coins, ShieldCheck, ShoppingCart, Truck } from "lucide-react";
 import { getProduct, buyProduct } from "@/lib/api/products";
 import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { ItemArt } from "@/components/ui/ItemArt";
+import { RegionMedallion } from "@/components/ui/RegionMedallion";
 import { Skeleton } from "@/components/ui/Skeleton";
 import type { Product } from "@/types/product";
 
@@ -24,6 +25,14 @@ type Tab = "details" | "delivery";
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: "details", label: "Details" },
   { id: "delivery", label: "Delivery" },
+];
+
+/** Bracket positions for the corners of the art frame. */
+const FRAME_CORNERS = [
+  "top-1 left-1 border-t-2 border-l-2 rounded-tl",
+  "top-1 right-1 border-t-2 border-r-2 rounded-tr",
+  "bottom-1 left-1 border-b-2 border-l-2 rounded-bl",
+  "bottom-1 right-1 border-r-2 border-b-2 rounded-br",
 ];
 
 export default function ProductDetailPage({ params }: ProductDetailPageProps) {
@@ -111,13 +120,27 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
       </Link>
 
       <div className="mt-6 grid grid-cols-1 gap-10 md:grid-cols-2 md:items-start">
-        <div className="rounded-xl border border-stroke-strong/60 p-2">
-          <ItemArt title={product.title} className="aspect-square w-full rounded-lg" feature />
+        {/* A struck metal frame around the art, as in the design: an outer
+            bevelled plate, an inner hairline, and a bracket at each corner. */}
+        <div className="relative rounded-2xl border-2 border-stroke-strong/70 bg-gradient-to-br from-surface-muted via-surface to-surface-muted p-3 shadow-2xl shadow-black/20 dark:shadow-black/60">
+          <ItemArt
+            title={product.title}
+            className="aspect-square w-full rounded-lg ring-1 ring-stroke-strong/50"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            feature
+          />
+          {FRAME_CORNERS.map((corner) => (
+            <span
+              key={corner}
+              aria-hidden="true"
+              className={`pointer-events-none absolute h-4 w-4 border-brand-500/40 ${corner}`}
+            />
+          ))}
         </div>
 
         <div>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-stroke bg-surface-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-            <MapPin className="h-3 w-3" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-stroke bg-surface-muted py-1 pr-3.5 pl-1 text-xs font-medium text-muted-foreground">
+            <RegionMedallion location={product.location} className="h-6 w-6 ring-offset-0" />
             {product.location === "JO" ? "Jordan" : "Saudi Arabia"}
           </span>
 
@@ -130,16 +153,26 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
             <Coins className="h-7 w-7 shrink-0 text-brand-500" />${product.price}
           </p>
 
-          <Button
-            onClick={handleBuy}
-            disabled={isBuying}
-            size="lg"
-            variant="accent"
-            className="mt-6 w-full sm:w-auto"
-          >
-            <ShoppingCart className="h-4 w-4" />
-            {isBuying ? "Processing…" : "Buy now"}
-          </Button>
+          {/* The purchase action is the one lit control on the page, so it gets
+              a halo behind it rather than only a fill colour. */}
+          <div className="relative mt-6 inline-block w-full sm:w-auto">
+            <span
+              aria-hidden="true"
+              className={`pointer-events-none absolute -inset-1 rounded-xl bg-accent-500/35 blur-lg transition-opacity duration-300 ${
+                isBuying ? "opacity-40" : ""
+              }`}
+            />
+            <Button
+              onClick={handleBuy}
+              disabled={isBuying}
+              size="lg"
+              variant="accent"
+              className="relative w-full ring-1 ring-accent-300/40 sm:w-auto"
+            >
+              <ShoppingCart className="h-4 w-4" />
+              {isBuying ? "Processing…" : "Buy now"}
+            </Button>
+          </div>
 
           <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             <ShieldCheck className="h-3.5 w-3.5 text-accent-600 dark:text-accent-400" />
