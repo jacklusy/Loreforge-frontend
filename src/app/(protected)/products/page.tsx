@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import Link from "next/link";
 import { listProducts } from "@/lib/api/products";
@@ -10,11 +11,25 @@ import type { Location, ProductListResponse } from "@/types/product";
 
 const PAGE_SIZE = 20;
 
-export default function ProductsPage() {
+function parsePage(value: string | null): number {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+}
+
+function parseLocation(value: string | null): Location | "" {
+  return value === "JO" || value === "SA" ? value : "";
+}
+
+function ProductsPageContent() {
   // The (protected) layout guarantees a token exists before this page renders.
   const { token } = useAuth();
-  const [page, setPage] = useState(1);
-  const [location, setLocation] = useState<Location | "">("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Page and filter live in the URL, not component state, so a reload, a shared
+  // link, or the browser back/forward buttons all land on the same view.
+  const page = parsePage(searchParams.get("page"));
+  const location = parseLocation(searchParams.get("location"));
 
   const { data, error, isLoading } = useSWR<ProductListResponse, ApiError>(
     token ? ["products", page, location] : null,
@@ -23,10 +38,16 @@ export default function ProductsPage() {
 
   const totalPages = Math.max(1, Math.ceil((data?.total ?? 0) / PAGE_SIZE));
 
-  function handleLocationChange(next: Location | ""): void {
-    setLocation(next);
-    setPage(1);
-  }
+  const navigate = useCallback(
+    (nextPage: number, nextLocation: Location | "") => {
+      const params = new URLSearchParams();
+      if (nextPage > 1) params.set("page", String(nextPage));
+      if (nextLocation) params.set("location", nextLocation);
+      const query = params.toString();
+      router.push(query ? `/products?${query}` : "/products");
+    },
+    [router]
+  );
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
@@ -36,7 +57,7 @@ export default function ProductsPage() {
           Location
           <select
             value={location}
-            onChange={(event) => handleLocationChange(event.target.value as Location | "")}
+            onChange={(event) => navigate(1, event.target.value as Location | "")}
             className="rounded border border-gray-300 px-3 py-1.5"
           >
             <option value="">All</option>
@@ -76,7 +97,7 @@ export default function ProductsPage() {
 
       <div className="mt-8 flex items-center justify-center gap-4">
         <button
-          onClick={() => setPage((current) => Math.max(1, current - 1))}
+          onClick={() => navigate(page - 1, location)}
           disabled={page <= 1}
           className="rounded border border-gray-300 px-3 py-1 text-sm disabled:opacity-40"
         >
@@ -86,7 +107,7 @@ export default function ProductsPage() {
           Page {page} of {totalPages}
         </span>
         <button
-          onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+          onClick={() => navigate(page + 1, location)}
           disabled={page >= totalPages}
           className="rounded border border-gray-300 px-3 py-1 text-sm disabled:opacity-40"
         >
@@ -94,5 +115,13 @@ export default function ProductsPage() {
         </button>
       </div>
     </main>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<p className="p-8 text-center text-sm text-gray-500">Loading…</p>}>
+      <ProductsPageContent />
+    </Suspense>
   );
 }
