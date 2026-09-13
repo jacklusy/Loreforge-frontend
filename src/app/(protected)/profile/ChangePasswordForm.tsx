@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { toast } from "sonner";
 import { changePassword } from "@/lib/api/me";
 import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth/AuthContext";
@@ -22,7 +23,9 @@ export function ChangePasswordForm() {
     setFormSuccess(false);
 
     if (newPassword !== confirmPassword) {
-      setFormError("New password and confirmation don't match.");
+      const message = "New password and confirmation don't match.";
+      setFormError(message);
+      toast.error("Check your details", { description: message });
       return;
     }
 
@@ -36,8 +39,13 @@ export function ChangePasswordForm() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
+      toast.success("Password updated", {
+        description: "Use your new password next time you sign in.",
+      });
     } catch (err) {
-      setFormError(err instanceof ApiError ? err.message : "Something went wrong.");
+      const message = err instanceof ApiError ? err.message : "Something went wrong.";
+      setFormError(message);
+      toast.error("Couldn't update password", { description: message });
     } finally {
       setIsSubmitting(false);
     }
