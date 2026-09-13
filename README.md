@@ -108,6 +108,20 @@ header instead of each page re-implementing the guard.
   indicator flag emoji (some configurations show plain text instead of a flag) — a
   `MapPin` icon plus the region name is used instead, which renders identically
   everywhere.
+- **A 401 on an authenticated request means "log out and explain why," centralized
+  in `apiFetch`** — not scattered per-page error handling. It only fires when the
+  request carried a token (`options.token`), so a plain wrong-password response
+  from `/auth/login` (which sends no token) is unaffected, and it triggers a hard
+  `window.location.href` navigation rather than the Next.js router deliberately:
+  a full reload guarantees every component's state resets along with the token,
+  instead of a half-authenticated page lingering. The backend was audited
+  alongside this fix to confirm every *other* 401-shaped case (e.g. a wrong
+  current password while changing it) actually returns a different status code —
+  see `backend/README.md`'s design decisions for that half of the fix.
+- **The activity feed is a read view onto the backend's audit log, not a separate
+  concept.** Rather than build bespoke "recent sign-ins" UI state, `/profile`
+  just renders whatever `GET /me/activity` returns — the same log entries a
+  future admin tool would read from.
 
 ## Verified
 
