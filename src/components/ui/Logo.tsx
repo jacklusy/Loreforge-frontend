@@ -17,14 +17,33 @@ export function LogoMark({ className }: { className?: string }) {
   );
 }
 
-/** Full lockup: mark + wordmark, used in the header and on auth/landing screens. */
-export function Logo({ className }: { className?: string }) {
+/** Full lockup: mark + wordmark, used in the header and on auth/landing screens.
+ *
+ * `tone="onDark"` is for surfaces that are dark in *both* themes (the login
+ * brand panel), where the theme-driven text colors would render near-invisible.
+ */
+export function Logo({
+  className,
+  tone = "default",
+}: {
+  className?: string;
+  tone?: "default" | "onDark";
+}) {
+  const onDark = tone === "onDark";
   return (
     <span className={`inline-flex items-center gap-2.5 ${className ?? ""}`}>
       <LogoMark className="h-8 w-8 shrink-0" />
       <span className="flex flex-col leading-none">
-        <span className="text-[15px] font-bold tracking-tight text-foreground">Loreforge</span>
-        <span className="text-[10px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
+        <span
+          className={`text-[15px] font-bold tracking-tight ${onDark ? "text-stone-50" : "text-foreground"}`}
+        >
+          Loreforge
+        </span>
+        <span
+          className={`text-[10px] font-semibold tracking-[0.14em] uppercase ${
+            onDark ? "text-stone-400" : "text-muted-foreground"
+          }`}
+        >
           Game Marketplace
         </span>
       </span>

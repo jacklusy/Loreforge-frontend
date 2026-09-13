@@ -72,7 +72,7 @@ function LoginFormContent() {
         />
 
         <Link href="/" className="relative z-10 inline-flex w-fit">
-          <Logo />
+          <Logo tone="onDark" />
         </Link>
 
         <div className="relative z-10">
