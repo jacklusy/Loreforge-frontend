@@ -1,55 +1,69 @@
 @import "tailwindcss";
 
+/* Manual theme switching (light / dark / system) is driven by a `class` on <html>
+   set by next-themes, so the `dark:` variant has to follow that class rather than
+   the OS media query it defaults to. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
  * Design tokens. Semantic names (brand/accent/surface/stroke/muted) rather than
  * raw color utilities everywhere, so the palette can change in one place without
- * touching every component. Brand = a forge orange (navigation, links, primary
- * actions), accent = a rune teal (buy/purchase actions) — Loreforge's fire-and-
- * magic identity, and a deliberate two-color pairing instead of a single default
- * blue.
+ * touching every component.
+ *
+ * Loreforge's identity is a forge: warm parchment and ember-gold in light mode,
+ * banked-coals dark in dark mode, with a rune-teal accent reserved for the
+ * primary purchase action so it reads as distinct from ordinary navigation.
  */
 :root {
-  --background: #fafaf9;
-  --foreground: #1c1917;
-  --surface: #ffffff;
-  --surface-muted: #f5f5f4;
-  --stroke: #e7e5e4;
-  --muted-foreground: #78716c;
+  --background: #f7f2ea;
+  --background-accent: #efe6d8;
+  --surface: #fffdfa;
+  --surface-muted: #f0e8dc;
+  --surface-raised: #ffffff;
+  --stroke: #e2d5c2;
+  --stroke-strong: #cbb99f;
+  --foreground: #241d17;
+  --muted-foreground: #6f6357;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c0a09;
-    --foreground: #fafaf9;
-    --surface: #1c1917;
-    --surface-muted: #292524;
-    --stroke: #3f3a37;
-    --muted-foreground: #a8a29e;
-  }
+.dark {
+  --background: #0d0b09;
+  --background-accent: #17120e;
+  --surface: #17130f;
+  --surface-muted: #211a15;
+  --surface-raised: #1e1813;
+  --stroke: #332a22;
+  --stroke-strong: #4a3d31;
+  --foreground: #f3ece2;
+  --muted-foreground: #a3968a;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background-accent: var(--background-accent);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
+  --color-surface-raised: var(--surface-raised);
   --color-stroke: var(--stroke);
+  --color-stroke-strong: var(--stroke-strong);
+  --color-foreground: var(--foreground);
   --color-muted-foreground: var(--muted-foreground);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-cinzel);
 
-  --color-brand-50: var(--color-orange-50);
-  --color-brand-100: var(--color-orange-100);
-  --color-brand-200: var(--color-orange-200);
-  --color-brand-300: var(--color-orange-300);
-  --color-brand-400: var(--color-orange-400);
-  --color-brand-500: var(--color-orange-500);
-  --color-brand-600: var(--color-orange-600);
-  --color-brand-700: var(--color-orange-700);
-  --color-brand-800: var(--color-orange-800);
-  --color-brand-900: var(--color-orange-900);
-  --color-brand-950: var(--color-orange-950);
+  --color-brand-50: var(--color-amber-50);
+  --color-brand-100: var(--color-amber-100);
+  --color-brand-200: var(--color-amber-200);
+  --color-brand-300: var(--color-amber-300);
+  --color-brand-400: var(--color-amber-400);
+  --color-brand-500: var(--color-amber-500);
+  --color-brand-600: var(--color-amber-600);
+  --color-brand-700: var(--color-amber-700);
+  --color-brand-800: var(--color-amber-800);
+  --color-brand-900: var(--color-amber-900);
+  --color-brand-950: var(--color-amber-950);
 
   --color-accent-50: var(--color-teal-50);
   --color-accent-100: var(--color-teal-100);
@@ -72,8 +86,24 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* A faint stone grain over the whole page. Pure CSS (an SVG turbulence data URI)
+   rather than an image asset, so it costs no request and scales to any viewport. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.dark body::before {
+  opacity: 0.06;
+}
+
 ::selection {
-  background: var(--color-brand-200);
+  background: var(--color-brand-300);
   color: var(--color-brand-950);
 }
 
