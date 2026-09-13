@@ -4,13 +4,14 @@ import { Suspense, useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import Link from "next/link";
-import { ArrowUpDown, Coins, MapPin, PackageSearch, Search } from "lucide-react";
+import { ArrowUpDown, Coins, MapPin, PackageSearch, Search, ShoppingCart } from "lucide-react";
 import { listProducts, type ProductSort } from "@/lib/api/products";
 import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Alert } from "@/components/ui/Alert";
 import { ItemArt } from "@/components/ui/ItemArt";
 import { Pagination } from "@/components/ui/Pagination";
+import { RegionMedallion } from "@/components/ui/RegionMedallion";
 import { Select } from "@/components/ui/Select";
 import { Skeleton } from "@/components/ui/Skeleton";
 import type { Location, ProductListResponse } from "@/types/product";
@@ -47,8 +48,8 @@ function parseSort(value: string | null): ProductSort {
 
 function ProductCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-xl border border-stroke bg-surface">
-      <Skeleton className="h-40 w-full rounded-none" />
+    <div className="overflow-hidden rounded-2xl border border-stroke bg-surface">
+      <Skeleton className="aspect-[4/3] w-full rounded-none" />
       <div className="space-y-2.5 p-4">
         <Skeleton className="h-4 w-2/3" />
         <Skeleton className="h-3 w-full" />
@@ -203,27 +204,33 @@ function ProductsPageContent() {
             <Link
               key={product.id}
               href={`/products/${product.id}`}
-              className="group overflow-hidden rounded-xl border border-stroke bg-surface transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/40"
+              className="group relative overflow-hidden rounded-2xl border border-stroke bg-surface transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/40"
             >
               <ItemArt
                 title={product.title}
-                className="h-40 w-full"
-                iconClassName="h-14 w-14 transition-transform duration-300 group-hover:scale-110"
+                className="aspect-[4/3] w-full"
+                iconClassName="h-16 w-16 transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="p-4">
+
+              <span className="pointer-events-none absolute top-3 right-3 inline-flex translate-y-1 items-center gap-1.5 rounded-full bg-black/55 px-3 py-1.5 text-xs font-medium text-white opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+                <ShoppingCart className="h-3.5 w-3.5" />
+                View item
+              </span>
+
+              {/* Pulled up over the art and faded into the card colour, so the
+                  artwork bleeds into the text block with no hard divider. */}
+              <div className="relative -mt-10 bg-gradient-to-b from-transparent via-surface/95 to-surface px-4 pt-9 pb-4">
                 <h2 className="font-display text-base font-semibold tracking-tight">
                   {product.title}
                 </h2>
                 <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
                   {product.description}
                 </p>
-                <div className="mt-3.5 flex items-center justify-between border-t border-stroke pt-3">
+                <div className="mt-4 flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-brand-700 dark:text-brand-300">
                     <Coins className="h-4 w-4 text-brand-500" />${product.price}
                   </span>
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-stroke-strong bg-surface-muted font-mono text-[10px] font-bold text-muted-foreground">
-                    {product.location}
-                  </span>
+                  <RegionMedallion location={product.location} />
                 </div>
               </div>
             </Link>
