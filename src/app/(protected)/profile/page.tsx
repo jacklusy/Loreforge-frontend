@@ -25,7 +25,7 @@ export default function ProfilePage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
-      <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight">Profile</h1>
       <p className="mt-1 text-sm text-muted-foreground">Manage your account and password.</p>
 
       <section className="mt-8 rounded-2xl border border-stroke bg-surface p-6">

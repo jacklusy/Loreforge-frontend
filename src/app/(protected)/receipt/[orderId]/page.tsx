@@ -48,7 +48,7 @@ export default function ReceiptPage({ params }: ReceiptPageProps) {
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-muted">
           <PackageX className="h-7 w-7 text-muted-foreground" />
         </div>
-        <h1 className="mt-4 text-lg font-bold">Receipt not found</h1>
+        <h1 className="mt-4 font-display text-xl font-bold">Receipt not found</h1>
         <Alert variant="error" className="mt-4 w-full text-left">
           {error instanceof ApiError ? error.message : "This receipt doesn't exist."}
         </Alert>
@@ -64,7 +64,7 @@ export default function ReceiptPage({ params }: ReceiptPageProps) {
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/15">
         <CheckCircle2 className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
       </div>
-      <h1 className="mt-4 text-2xl font-bold">Purchase complete</h1>
+      <h1 className="mt-4 font-display text-3xl font-bold">Purchase complete</h1>
       <p className="mt-1 text-sm text-muted-foreground">Thanks for your order.</p>
 
       <dl className="mt-8 w-full divide-y divide-stroke rounded-2xl border border-stroke bg-surface">

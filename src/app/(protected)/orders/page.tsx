@@ -4,13 +4,12 @@ import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import Link from "next/link";
-import { PackageOpen } from "lucide-react";
+import { Coins, PackageOpen } from "lucide-react";
 import { listOrders } from "@/lib/api/orders";
 import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth/AuthContext";
-import { getProductVisual } from "@/lib/product-visuals";
 import { Alert } from "@/components/ui/Alert";
-import { Badge } from "@/components/ui/Badge";
+import { ItemArt } from "@/components/ui/ItemArt";
 import { Pagination } from "@/components/ui/Pagination";
 import { Skeleton } from "@/components/ui/Skeleton";
 import type { OrderListResponse } from "@/types/order";
@@ -60,7 +59,7 @@ function OrderHistoryContent() {
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Order History</h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight">Order History</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {data ? `${data.total} order${data.total === 1 ? "" : "s"} placed` : "Your past purchases"}
         </p>
@@ -89,30 +88,31 @@ function OrderHistoryContent() {
         </div>
       ) : (
         <div className="space-y-3">
-          {data.items.map((order) => {
-            const { icon: Icon, gradient } = getProductVisual(order.product_title);
-            return (
-              <Link
-                key={order.id}
-                href={`/receipt/${order.id}`}
-                className="flex items-center gap-4 rounded-xl border border-stroke bg-surface p-4 transition-colors hover:border-brand-300"
-              >
-                <div
-                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${gradient}`}
-                >
-                  <Icon className="h-5 w-5 text-white/90" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{order.product_title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    Order #{order.id} · {new Date(order.created_at).toLocaleDateString()}
-                  </p>
-                </div>
-                <Badge tone={order.location === "JO" ? "brand" : "accent"}>{order.location}</Badge>
-                <span className="font-mono text-sm font-semibold">${order.price_paid}</span>
-              </Link>
-            );
-          })}
+          {data.items.map((order) => (
+            <Link
+              key={order.id}
+              href={`/receipt/${order.id}`}
+              className="flex items-center gap-4 rounded-xl border border-stroke bg-surface p-4 transition-colors hover:border-brand-500/50"
+            >
+              <ItemArt
+                title={order.product_title}
+                className="h-14 w-14 shrink-0 rounded-lg"
+                iconClassName="h-6 w-6"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-display font-semibold">{order.product_title}</p>
+                <p className="text-xs text-muted-foreground">
+                  Order #{order.id} · {new Date(order.created_at).toLocaleDateString()}
+                </p>
+              </div>
+              <span className="hidden h-7 w-7 shrink-0 items-center justify-center rounded-full border border-stroke-strong bg-surface-muted font-mono text-[10px] font-bold text-muted-foreground sm:inline-flex">
+                {order.location}
+              </span>
+              <span className="inline-flex shrink-0 items-center gap-1.5 font-mono text-sm font-semibold text-brand-700 dark:text-brand-300">
+                <Coins className="h-4 w-4 text-brand-500" />${order.price_paid}
+              </span>
+            </Link>
+          ))}
         </div>
       )}
 
