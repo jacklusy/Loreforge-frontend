@@ -37,7 +37,8 @@ src/
     page.tsx / HomeCta.tsx        Landing page (auth-aware CTA)
     login/                        Login page (redirects away if already signed in)
     not-found.tsx / error.tsx     Branded 404 and global error boundary
-    icon.svg / opengraph-image.tsx  Favicon and social-share image
+    icon.png / apple-icon.png     Favicon and iOS home-screen icon (real PNGs, not inline SVG)
+    opengraph-image.tsx           Social-share image
     (protected)/layout.tsx        Auth guard + header/nav/footer, shared by every route below
     (protected)/products/                   Product grid, pagination, location filter
     (protected)/products/[id]/              Product detail + Buy button
@@ -68,6 +69,10 @@ header instead of each page re-implementing the guard.
   `Alert`, `Skeleton`, `Pagination`, `Logo` — every page composes these instead of
   ad-hoc Tailwind classes, so spacing, radii, and color usage stay consistent
   without a component-by-component review.
+- **Logo**: a real PNG image (`public/logo-mark.png`, 512×512), not an inline SVG.
+  The favicon (`app/icon.png`, 64×64) and iOS home-screen icon (`app/apple-icon.png`,
+  180×180) are rendered from the same source design at their own native
+  resolution, rather than the browser scaling down one oversized file.
 - **Icons**: `lucide-react`. Product cards get a keyword-matched icon and gradient
   per title (`lib/product-visuals.ts`) instead of a generic placeholder — there
   are no real product images in the dataset, so this gives each card a distinct,
