@@ -1,8 +1,31 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useSyncExternalStore, type ReactNode } from "react";
 
 const STORAGE_KEY = "tamatem_auth_token";
+
+type Listener = () => void;
+const listeners = new Set<Listener>();
+
+function subscribe(listener: Listener): () => void {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+function getSnapshot(): string | null {
+  return window.localStorage.getItem(STORAGE_KEY);
+}
+
+// Distinct from `null` ("confirmed no token"): means "not yet known" — this runs
+// during server rendering and the initial client hydration pass, before
+// localStorage can be read at all.
+function getServerSnapshot(): undefined {
+  return undefined;
+}
+
+function notifyListeners(): void {
+  listeners.forEach((listener) => listener());
+}
 
 interface AuthContextValue {
   token: string | null;
@@ -15,24 +38,21 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // localStorage isn't available during server rendering, so the token is read
-  // once the component mounts on the client.
-  useEffect(() => {
-    setToken(window.localStorage.getItem(STORAGE_KEY));
-    setIsLoading(false);
-  }, []);
+  // useSyncExternalStore (rather than useState+useEffect) is what lets this read a
+  // browser-only API safely across server rendering and hydration without a
+  // mismatch, and without an effect that only exists to call setState once.
+  const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const isLoading = snapshot === undefined;
+  const token = isLoading ? null : snapshot;
 
   function login(newToken: string): void {
     window.localStorage.setItem(STORAGE_KEY, newToken);
-    setToken(newToken);
+    notifyListeners();
   }
 
   function logout(): void {
     window.localStorage.removeItem(STORAGE_KEY);
-    setToken(null);
+    notifyListeners();
   }
 
   return (
