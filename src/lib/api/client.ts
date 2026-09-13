@@ -61,5 +61,11 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
     throw new ApiError(response.status, message);
   }
 
+  // A 204 (e.g. PUT /me/password) has no body — calling .json() on it would
+  // throw trying to parse an empty string.
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
   return response.json() as Promise<T>;
 }
