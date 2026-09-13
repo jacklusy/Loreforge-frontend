@@ -3,12 +3,15 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, UserRound } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useRequireAuth } from "@/lib/auth/useRequireAuth";
 import { Logo } from "@/components/ui/Logo";
 
-const NAV_LINKS = [{ href: "/products", label: "Products" }];
+const NAV_LINKS = [
+  { href: "/products", label: "Products" },
+  { href: "/orders", label: "Orders" },
+];
 
 /**
  * Shared shell for every page that requires authentication: gates on the token
@@ -53,13 +56,26 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
             </nav>
           </div>
 
-          <button
-            onClick={logout}
-            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground"
-          >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">Log out</span>
-          </button>
+          <div className="flex items-center gap-1">
+            <Link
+              href="/profile"
+              className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                pathname === "/profile"
+                  ? "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300"
+                  : "text-muted-foreground hover:bg-surface-muted hover:text-foreground"
+              }`}
+            >
+              <UserRound className="h-4 w-4" />
+              <span className="hidden sm:inline">Profile</span>
+            </Link>
+            <button
+              onClick={logout}
+              className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Log out</span>
+            </button>
+          </div>
         </div>
       </header>
       {children}
