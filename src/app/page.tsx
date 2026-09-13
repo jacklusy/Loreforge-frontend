@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Gamepad2, MapPin, ShieldCheck, Zap } from "lucide-react";
+import { Footer } from "@/components/ui/Footer";
 import { Logo } from "@/components/ui/Logo";
 import { HomeCta } from "@/app/HomeCta";
 
@@ -67,9 +68,7 @@ export default function HomePage() {
         ))}
       </section>
 
-      <footer className="border-t border-stroke px-4 py-6 text-center text-xs text-muted-foreground">
-        Built for the Tamatem technical assessment.
-      </footer>
+      <Footer />
     </div>
   );
 }

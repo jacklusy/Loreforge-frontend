@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { LogOut, UserRound } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useRequireAuth } from "@/lib/auth/useRequireAuth";
+import { Footer } from "@/components/ui/Footer";
 import { Logo } from "@/components/ui/Logo";
 
 const NAV_LINKS = [
@@ -79,6 +80,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         </div>
       </header>
       {children}
+      <Footer />
     </div>
   );
 }
