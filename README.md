@@ -60,10 +60,10 @@ header instead of each page re-implementing the guard.
 
 - **Tokens** (`app/globals.css`): semantic CSS variables (`--background`,
   `--surface`, `--stroke`, `--muted-foreground`, …) rather than raw color
-  utilities everywhere, plus `brand` (violet) and `accent` (amber) color scales
-  aliased from Tailwind's defaults — a deliberate two-color identity instead of a
-  single default blue. Dark mode follows `prefers-color-scheme` automatically;
-  there's no manual toggle to keep in sync.
+  utilities everywhere, plus `brand` (a forge orange) and `accent` (a rune teal)
+  color scales aliased from Tailwind's defaults — a deliberate two-color identity
+  instead of a single default blue. Dark mode follows `prefers-color-scheme`
+  automatically; there's no manual toggle to keep in sync.
 - **Primitives** (`components/ui/`): `Button`/`ButtonLink`, `Card`, `Badge`,
   `Alert`, `Skeleton`, `Pagination`, `Logo` — every page composes these instead of
   ad-hoc Tailwind classes, so spacing, radii, and color usage stay consistent
