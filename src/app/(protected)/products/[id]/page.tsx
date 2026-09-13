@@ -35,10 +35,6 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     setIsBuying(true);
     try {
       const order = await buyProduct(token, id);
-      // Carry the just-created receipt to the next page without a refetch; the
-      // receipt page falls back to GET /orders/{id} if this isn't present
-      // (e.g. a direct link or a page refresh).
-      sessionStorage.setItem("lastReceipt", JSON.stringify(order));
       router.push(`/receipt/${order.id}`);
     } catch (err) {
       setBuyError(err instanceof ApiError ? err.message : "Purchase failed. Please try again.");
