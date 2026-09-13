@@ -91,8 +91,8 @@ function ProductsPageContent() {
             aria-label="Filter by location"
           >
             <option value="">All locations</option>
-            <option value="JO">🇯🇴 Jordan</option>
-            <option value="SA">🇸🇦 Saudi Arabia</option>
+            <option value="JO">Jordan</option>
+            <option value="SA">Saudi Arabia</option>
           </select>
         </label>
       </div>
