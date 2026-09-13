@@ -1,11 +1,14 @@
 "use client";
 
-import { use } from "react";
-import Link from "next/link";
+import { use, useEffect } from "react";
 import useSWR from "swr";
+import { CheckCircle2, PackageX } from "lucide-react";
 import { getOrder } from "@/lib/api/orders";
 import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { Alert } from "@/components/ui/Alert";
+import { ButtonLink } from "@/components/ui/ButtonLink";
+import { Skeleton } from "@/components/ui/Skeleton";
 import type { Order } from "@/types/order";
 
 interface ReceiptPageProps {
@@ -25,29 +28,46 @@ export default function ReceiptPage({ params }: ReceiptPageProps) {
     getOrder(token as string, orderId)
   );
 
+  useEffect(() => {
+    document.title = "Receipt · Tamatem Game Store";
+  }, []);
+
   if (isLoading) {
-    return <p className="p-8 text-center text-sm text-gray-500">Loading…</p>;
+    return (
+      <main className="mx-auto w-full max-w-md flex-1 px-4 py-16">
+        <Skeleton className="mx-auto h-14 w-14 rounded-full" />
+        <Skeleton className="mx-auto mt-4 h-6 w-40" />
+        <Skeleton className="mt-8 h-48 w-full rounded-2xl" />
+      </main>
+    );
   }
 
   if (error || !order) {
     return (
-      <main className="mx-auto w-full max-w-md flex-1 px-4 py-16 text-center">
-        <p className="text-red-600">
-          {error instanceof ApiError ? error.message : "Receipt not found."}
-        </p>
-        <Link href="/products" className="mt-4 inline-block text-sm underline">
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center px-4 py-16 text-center">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-muted">
+          <PackageX className="h-7 w-7 text-muted-foreground" />
+        </div>
+        <h1 className="mt-4 text-lg font-bold">Receipt not found</h1>
+        <Alert variant="error" className="mt-4 w-full text-left">
+          {error instanceof ApiError ? error.message : "This receipt doesn't exist."}
+        </Alert>
+        <ButtonLink href="/products" variant="secondary" className="mt-6">
           Back to products
-        </Link>
+        </ButtonLink>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto w-full max-w-md flex-1 px-4 py-16">
-      <h1 className="text-2xl font-bold">Purchase complete</h1>
-      <p className="mt-1 text-gray-600">Thanks for your order.</p>
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center px-4 py-16">
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/15">
+        <CheckCircle2 className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
+      </div>
+      <h1 className="mt-4 text-2xl font-bold">Purchase complete</h1>
+      <p className="mt-1 text-sm text-muted-foreground">Thanks for your order.</p>
 
-      <dl className="mt-6 divide-y divide-gray-200 rounded-lg border border-gray-200">
+      <dl className="mt-8 w-full divide-y divide-stroke rounded-2xl border border-stroke bg-surface">
         <Row label="Order ID" value={`#${order.id}`} />
         <Row label="Item" value={order.product_title} />
         <Row label="Price paid" value={`$${order.price_paid}`} />
@@ -55,18 +75,18 @@ export default function ReceiptPage({ params }: ReceiptPageProps) {
         <Row label="Date" value={new Date(order.created_at).toLocaleString()} />
       </dl>
 
-      <Link href="/products" className="mt-6 inline-block text-sm underline">
+      <ButtonLink href="/products" size="lg" className="mt-8 w-full">
         Continue shopping
-      </Link>
+      </ButtonLink>
     </main>
   );
 }
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between px-4 py-3 text-sm">
-      <dt className="text-gray-500">{label}</dt>
-      <dd className="font-medium">{value}</dd>
+    <div className="flex justify-between px-4 py-3.5 text-sm">
+      <dt className="text-muted-foreground">{label}</dt>
+      <dd className="font-mono font-medium">{value}</dd>
     </div>
   );
 }
