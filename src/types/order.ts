@@ -8,3 +8,10 @@ export interface Order {
   location: Location;
   created_at: string;
 }
+
+export interface OrderListResponse {
+  items: Order[];
+  page: number;
+  page_size: number;
+  total: number;
+}
