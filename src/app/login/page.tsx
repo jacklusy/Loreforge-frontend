@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { login as loginRequest } from "@/lib/api/auth";
 import { ApiError } from "@/lib/api/client";
@@ -11,8 +11,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { token, isLoading, login } = useAuth();
   const router = useRouter();
+
+  // An already-authenticated visitor landing on /login (e.g. a bookmark, or
+  // browser back) belongs on /products, not a login form asking them to sign in
+  // again.
+  useEffect(() => {
+    if (!isLoading && token) {
+      router.replace("/products");
+    }
+  }, [isLoading, token, router]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
