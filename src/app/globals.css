@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens. Semantic names (brand/accent/surface/stroke/muted) rather than
+ * raw color utilities everywhere, so the palette can change in one place without
+ * touching every component. Brand = violet (navigation, links, primary actions),
+ * accent = amber (buy/purchase actions) — a deliberate two-color identity instead
+ * of a single default blue.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafaf9;
+  --foreground: #1c1917;
+  --surface: #ffffff;
+  --surface-muted: #f5f5f4;
+  --stroke: #e7e5e4;
+  --muted-foreground: #78716c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0c0a09;
+    --foreground: #fafaf9;
+    --surface: #1c1917;
+    --surface-muted: #292524;
+    --stroke: #3f3a37;
+    --muted-foreground: #a8a29e;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-stroke: var(--stroke);
+  --color-muted-foreground: var(--muted-foreground);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-brand-50: var(--color-violet-50);
+  --color-brand-100: var(--color-violet-100);
+  --color-brand-200: var(--color-violet-200);
+  --color-brand-300: var(--color-violet-300);
+  --color-brand-400: var(--color-violet-400);
+  --color-brand-500: var(--color-violet-500);
+  --color-brand-600: var(--color-violet-600);
+  --color-brand-700: var(--color-violet-700);
+  --color-brand-800: var(--color-violet-800);
+  --color-brand-900: var(--color-violet-900);
+  --color-brand-950: var(--color-violet-950);
+
+  --color-accent-50: var(--color-amber-50);
+  --color-accent-100: var(--color-amber-100);
+  --color-accent-200: var(--color-amber-200);
+  --color-accent-300: var(--color-amber-300);
+  --color-accent-400: var(--color-amber-400);
+  --color-accent-500: var(--color-amber-500);
+  --color-accent-600: var(--color-amber-600);
+  --color-accent-700: var(--color-amber-700);
+  --color-accent-800: var(--color-amber-800);
+  --color-accent-900: var(--color-amber-900);
+  --color-accent-950: var(--color-amber-950);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-brand-200);
+  color: var(--color-brand-950);
+}
+
+/* A single consistent focus ring, replacing the browser default outline, so
+   keyboard focus is clearly visible without looking like an accidental artifact. */
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
