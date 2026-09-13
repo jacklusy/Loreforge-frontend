@@ -130,6 +130,10 @@ Manually driven end-to-end with a headless browser against the real backend
 (desktop): the landing page's auth-aware CTA, login (including redirecting an
 already-authenticated visit away from `/login`), the product grid with pagination
 and location filtering surviving a reload, a purchase landing on its receipt page,
-logout, the auth guard on every protected route, and the branded 404 page — zero
+order history linking back to past receipts, the profile page's password change
+(correct current password, wrong current password — confirmed it shows an inline
+error rather than logging the user out, and a client-side mismatched-confirmation
+check) and its activity feed, logout, the auth guard on every protected route
+(including the newer `/orders` and `/profile`), and the branded 404 page — zero
 console errors throughout. `npx tsc --noEmit`, `npm run lint`, and `npm run build`
 all pass clean.
