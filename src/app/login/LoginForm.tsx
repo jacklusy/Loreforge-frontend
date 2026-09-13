@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState, type FormEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Lock, Mail } from "lucide-react";
 import { login as loginRequest } from "@/lib/api/auth";
 import { ApiError } from "@/lib/api/client";
@@ -10,13 +10,15 @@ import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 
-export function LoginForm() {
+function LoginFormContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { token, isLoading, login } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sessionExpired = searchParams.get("reason") === "session_expired";
 
   // An already-authenticated visitor landing on /login (e.g. a bookmark, or
   // browser back) belongs on /products, not a login form asking them to sign in
@@ -48,7 +50,7 @@ export function LoginForm() {
           to keep the screen from reading as a bare white form. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_15%_20%,theme(colors.violet.200/0.5),transparent_45%),radial-gradient(circle_at_85%_80%,theme(colors.amber.200/0.4),transparent_45%)] dark:bg-[radial-gradient(circle_at_15%_20%,theme(colors.violet.900/0.35),transparent_45%),radial-gradient(circle_at_85%_80%,theme(colors.amber.900/0.2),transparent_45%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_15%_20%,theme(colors.orange.200/0.5),transparent_45%),radial-gradient(circle_at_85%_80%,theme(colors.teal.200/0.4),transparent_45%)] dark:bg-[radial-gradient(circle_at_15%_20%,theme(colors.orange.900/0.3),transparent_45%),radial-gradient(circle_at_85%_80%,theme(colors.teal.900/0.25),transparent_45%)]"
       />
 
       <div className="w-full max-w-sm">
@@ -61,6 +63,12 @@ export function LoginForm() {
           <p className="mt-1 text-sm text-muted-foreground">
             Sign in to browse and buy game items.
           </p>
+
+          {sessionExpired && (
+            <Alert variant="info" className="mt-4">
+              Your session has expired. Please sign in again.
+            </Alert>
+          )}
 
           <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
             <label className="flex flex-col gap-1.5 text-sm font-medium">
@@ -104,5 +112,13 @@ export function LoginForm() {
         </div>
       </div>
     </main>
+  );
+}
+
+export function LoginForm() {
+  return (
+    <Suspense fallback={<p className="p-8 text-center text-sm text-gray-500">Loading…</p>}>
+      <LoginFormContent />
+    </Suspense>
   );
 }

@@ -1,8 +1,7 @@
 "use client";
 
 import { createContext, useContext, useSyncExternalStore, type ReactNode } from "react";
-
-const STORAGE_KEY = "tamatem_auth_token";
+import { AUTH_TOKEN_STORAGE_KEY as STORAGE_KEY } from "@/lib/auth/token-storage";
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
