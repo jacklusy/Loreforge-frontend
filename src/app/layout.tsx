@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Cinzel, Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "sonner";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import { ThemeProvider } from "@/lib/theme/ThemeProvider";
+import { ToastHost } from "@/components/ui/ToastHost";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -65,7 +65,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
           <AuthProvider>{children}</AuthProvider>
-          <Toaster position="top-center" richColors closeButton />
+          <ToastHost />
         </ThemeProvider>
       </body>
     </html>
