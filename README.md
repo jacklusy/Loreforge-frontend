@@ -1,9 +1,12 @@
-# Tamatem Game Store — Frontend
+# Loreforge — Frontend
 
-Next.js (App Router) + TypeScript frontend for the Tamatem Game Store: a landing
-page, login, a paginated/filterable product grid, product details with a Buy
-button, and a purchase receipt page. Talks to the FastAPI backend in the sibling
-`backend/` repo.
+Next.js (App Router) + TypeScript frontend for Loreforge, a digital game-item
+marketplace: a landing page, login, a paginated/filterable product grid, product
+details with a Buy button, a purchase receipt, order history, and a profile page
+(account info, password change, recent activity). Talks to the FastAPI backend in
+the sibling `backend/` repo. Built for a Tamatem technical assessment — the
+consumer-facing brand is original and unrelated to Tamatem's own branding; see
+`../ROADMAP.md` for the assignment this satisfies.
 
 ## Setup & run
 
