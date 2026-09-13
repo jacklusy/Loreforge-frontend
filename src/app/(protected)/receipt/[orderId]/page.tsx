@@ -29,7 +29,7 @@ export default function ReceiptPage({ params }: ReceiptPageProps) {
   );
 
   useEffect(() => {
-    document.title = "Receipt · Tamatem Game Store";
+    document.title = "Receipt · Loreforge";
   }, []);
 
   if (isLoading) {

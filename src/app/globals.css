@@ -3,9 +3,10 @@
 /*
  * Design tokens. Semantic names (brand/accent/surface/stroke/muted) rather than
  * raw color utilities everywhere, so the palette can change in one place without
- * touching every component. Brand = violet (navigation, links, primary actions),
- * accent = amber (buy/purchase actions) — a deliberate two-color identity instead
- * of a single default blue.
+ * touching every component. Brand = a forge orange (navigation, links, primary
+ * actions), accent = a rune teal (buy/purchase actions) — Loreforge's fire-and-
+ * magic identity, and a deliberate two-color pairing instead of a single default
+ * blue.
  */
 :root {
   --background: #fafaf9;
@@ -38,29 +39,29 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  --color-brand-50: var(--color-violet-50);
-  --color-brand-100: var(--color-violet-100);
-  --color-brand-200: var(--color-violet-200);
-  --color-brand-300: var(--color-violet-300);
-  --color-brand-400: var(--color-violet-400);
-  --color-brand-500: var(--color-violet-500);
-  --color-brand-600: var(--color-violet-600);
-  --color-brand-700: var(--color-violet-700);
-  --color-brand-800: var(--color-violet-800);
-  --color-brand-900: var(--color-violet-900);
-  --color-brand-950: var(--color-violet-950);
+  --color-brand-50: var(--color-orange-50);
+  --color-brand-100: var(--color-orange-100);
+  --color-brand-200: var(--color-orange-200);
+  --color-brand-300: var(--color-orange-300);
+  --color-brand-400: var(--color-orange-400);
+  --color-brand-500: var(--color-orange-500);
+  --color-brand-600: var(--color-orange-600);
+  --color-brand-700: var(--color-orange-700);
+  --color-brand-800: var(--color-orange-800);
+  --color-brand-900: var(--color-orange-900);
+  --color-brand-950: var(--color-orange-950);
 
-  --color-accent-50: var(--color-amber-50);
-  --color-accent-100: var(--color-amber-100);
-  --color-accent-200: var(--color-amber-200);
-  --color-accent-300: var(--color-amber-300);
-  --color-accent-400: var(--color-amber-400);
-  --color-accent-500: var(--color-amber-500);
-  --color-accent-600: var(--color-amber-600);
-  --color-accent-700: var(--color-amber-700);
-  --color-accent-800: var(--color-amber-800);
-  --color-accent-900: var(--color-amber-900);
-  --color-accent-950: var(--color-amber-950);
+  --color-accent-50: var(--color-teal-50);
+  --color-accent-100: var(--color-teal-100);
+  --color-accent-200: var(--color-teal-200);
+  --color-accent-300: var(--color-teal-300);
+  --color-accent-400: var(--color-teal-400);
+  --color-accent-500: var(--color-teal-500);
+  --color-accent-600: var(--color-teal-600);
+  --color-accent-700: var(--color-teal-700);
+  --color-accent-800: var(--color-teal-800);
+  --color-accent-900: var(--color-teal-900);
+  --color-accent-950: var(--color-teal-950);
 }
 
 body {

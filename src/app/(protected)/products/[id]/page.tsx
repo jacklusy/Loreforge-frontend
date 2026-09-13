@@ -37,8 +37,8 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
 
   useEffect(() => {
     document.title = product
-      ? `${product.title} · Tamatem Game Store`
-      : "Product · Tamatem Game Store";
+      ? `${product.title} · Loreforge`
+      : "Product · Loreforge";
   }, [product]);
 
   async function handleBuy(): Promise<void> {

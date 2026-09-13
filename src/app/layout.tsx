@@ -19,19 +19,19 @@ const SITE_DESCRIPTION =
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: {
-    default: "Tamatem Game Store",
-    template: "%s · Tamatem Game Store",
+    default: "Loreforge",
+    template: "%s · Loreforge",
   },
   description: SITE_DESCRIPTION,
   openGraph: {
-    title: "Tamatem Game Store",
+    title: "Loreforge",
     description: SITE_DESCRIPTION,
-    siteName: "Tamatem Game Store",
+    siteName: "Loreforge",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tamatem Game Store",
+    title: "Loreforge",
     description: SITE_DESCRIPTION,
   },
 };

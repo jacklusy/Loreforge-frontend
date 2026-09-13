@@ -69,7 +69,7 @@ function ProductsPageContent() {
   );
 
   useEffect(() => {
-    document.title = "Products · Tamatem Game Store";
+    document.title = "Products · Loreforge";
   }, []);
 
   return (

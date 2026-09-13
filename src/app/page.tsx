@@ -30,7 +30,7 @@ export default function HomePage() {
     <div className="relative flex min-h-screen flex-col overflow-hidden">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_10%_10%,theme(colors.violet.200/0.5),transparent_40%),radial-gradient(circle_at_90%_25%,theme(colors.amber.200/0.4),transparent_40%)] dark:bg-[radial-gradient(circle_at_10%_10%,theme(colors.violet.900/0.3),transparent_40%),radial-gradient(circle_at_90%_25%,theme(colors.amber.900/0.2),transparent_40%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_10%_10%,theme(colors.orange.200/0.5),transparent_40%),radial-gradient(circle_at_90%_25%,theme(colors.teal.200/0.4),transparent_40%)] dark:bg-[radial-gradient(circle_at_10%_10%,theme(colors.orange.900/0.3),transparent_40%),radial-gradient(circle_at_90%_25%,theme(colors.teal.900/0.25),transparent_40%)]"
       />
 
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-6">
