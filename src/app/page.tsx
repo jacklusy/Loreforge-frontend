@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Gamepad2, MapPin, ShieldCheck, Zap } from "lucide-react";
+import { Coins, MapPin, Receipt, ShieldCheck } from "lucide-react";
 import { Footer } from "@/components/ui/Footer";
-import { Logo } from "@/components/ui/Logo";
+import { ItemArt } from "@/components/ui/ItemArt";
+import { SiteHeader } from "@/components/ui/SiteHeader";
 import { HomeCta } from "@/app/HomeCta";
 
 export const metadata: Metadata = {
@@ -10,63 +11,96 @@ export const metadata: Metadata = {
 
 const FEATURES = [
   {
-    icon: Gamepad2,
+    icon: Coins,
     title: "100+ digital items",
-    desc: "Swords, potions, gear, and more from your favorite worlds.",
+    desc: "Blades, wards, potions and relics, each with a fixed price in the catalog.",
   },
   {
     icon: MapPin,
-    title: "JO & SA storefronts",
-    desc: "Browse and filter the catalog by the Jordan or Saudi Arabia region.",
+    title: "Two regional storefronts",
+    desc: "Filter the catalog down to the Jordan or Saudi Arabia inventory.",
   },
   {
-    icon: Zap,
-    title: "Instant checkout",
-    desc: "Buy an item and get your receipt the moment the order is placed.",
+    icon: Receipt,
+    title: "Instant receipts",
+    desc: "Every purchase writes an order you can reopen from your history later.",
   },
 ];
 
+// A representative slice of the catalog, used purely as showcase art on the
+// landing page — the real listing is behind auth.
+const SHOWCASE = ["Sword of Valor", "Potion of Healing", "Shield of Aegis", "Mystic Wand"];
+
 export default function HomePage() {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_10%_10%,theme(colors.orange.200/0.5),transparent_40%),radial-gradient(circle_at_90%_25%,theme(colors.teal.200/0.4),transparent_40%)] dark:bg-[radial-gradient(circle_at_10%_10%,theme(colors.orange.900/0.3),transparent_40%),radial-gradient(circle_at_90%_25%,theme(colors.teal.900/0.25),transparent_40%)]"
-      />
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
 
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-6">
-        <Logo />
-      </header>
+      <main className="flex-1">
+        <section className="relative overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_15%_15%,rgba(249,115,22,0.18),transparent_50%),radial-gradient(circle_at_85%_30%,rgba(20,184,166,0.14),transparent_50%)]"
+          />
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center px-4 py-12 text-center">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-stroke bg-surface px-3 py-1 text-xs font-medium text-muted-foreground">
-          <ShieldCheck className="h-3.5 w-3.5 text-brand-600" />
-          Secure, token-based checkout
-        </span>
+          <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 py-20 lg:grid-cols-2 lg:py-28">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-stroke bg-surface px-3 py-1 text-xs font-medium text-muted-foreground">
+                <ShieldCheck className="h-3.5 w-3.5 text-brand-500" />
+                Secure, token-based checkout
+              </span>
 
-        <h1 className="mt-6 text-4xl font-bold tracking-tight text-balance sm:text-5xl">
-          Your favorite game items,
-          <span className="text-brand-600"> one click away.</span>
-        </h1>
-        <p className="mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-          Browse a curated catalog of digital game items across Jordan and Saudi
-          Arabia, and check out in seconds.
-        </p>
+              <h1 className="mt-6 font-display text-5xl leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl">
+                Legendary gear,
+                <span className="text-brand-600 dark:text-brand-400"> forged to order.</span>
+              </h1>
 
-        <div className="mt-8">
-          <HomeCta />
-        </div>
-      </main>
+              <p className="mt-5 max-w-lg text-base text-muted-foreground sm:text-lg">
+                Loreforge is a marketplace for digital game items across Jordan and Saudi
+                Arabia. Browse the catalog, claim what you need, and walk away with a receipt
+                in seconds.
+              </p>
 
-      <section className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-4 px-4 pb-20 sm:grid-cols-3">
-        {FEATURES.map(({ icon: Icon, title, desc }) => (
-          <div key={title} className="rounded-2xl border border-stroke bg-surface p-5">
-            <Icon className="h-5 w-5 text-brand-600" />
-            <h2 className="mt-3 text-sm font-semibold">{title}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <HomeCta />
+                <span className="text-sm text-muted-foreground">No card required to browse.</span>
+              </div>
+            </div>
+
+            {/* Showcase grid, offset so it reads as a display case rather than a
+                second content column. */}
+            <div className="grid grid-cols-2 gap-4">
+              {SHOWCASE.map((title, index) => (
+                <div
+                  key={title}
+                  className={`overflow-hidden rounded-xl border border-stroke shadow-lg shadow-black/5 dark:shadow-black/40 ${
+                    index % 2 === 1 ? "translate-y-6" : ""
+                  }`}
+                >
+                  <ItemArt title={title} className="aspect-square w-full" iconClassName="h-12 w-12" />
+                  <p className="truncate bg-surface px-3 py-2.5 font-display text-xs font-semibold">
+                    {title}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </section>
+        </section>
+
+        <section className="border-t border-stroke bg-background-accent">
+          <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-16 sm:grid-cols-3">
+            {FEATURES.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="rounded-xl border border-stroke bg-surface p-6">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500/15">
+                  <Icon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
+                </span>
+                <h2 className="mt-4 font-display text-base font-semibold">{title}</h2>
+                <p className="mt-1.5 text-sm text-muted-foreground">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
 
       <Footer />
     </div>
