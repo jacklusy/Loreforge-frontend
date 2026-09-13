@@ -38,14 +38,16 @@ src/
     login/                        Login page (redirects away if already signed in)
     not-found.tsx / error.tsx     Branded 404 and global error boundary
     icon.svg / opengraph-image.tsx  Favicon and social-share image
-    (protected)/layout.tsx        Auth guard + header/nav, shared by every route below
+    (protected)/layout.tsx        Auth guard + header/nav/footer, shared by every route below
     (protected)/products/                   Product grid, pagination, location filter
     (protected)/products/[id]/              Product detail + Buy button
     (protected)/receipt/[orderId]/          Purchase receipt
-  components/ui/    Shared design-system primitives (Button, Card, Badge, Alert, …)
+    (protected)/orders/                     Order history (paginated)
+    (protected)/profile/                    Account info, change password, activity feed
+  components/ui/    Shared design-system primitives (Button, Card, Badge, Alert, Footer, …)
   lib/
     api/        Typed fetch client — one function per backend endpoint
-    auth/       AuthContext (token storage) + useRequireAuth guard hook
+    auth/       AuthContext (token storage) + useRequireAuth guard hook + shared storage key
     product-visuals.ts   Deterministic icon/gradient per product title
   types/        TypeScript types mirroring the backend's Pydantic schemas
 ```
