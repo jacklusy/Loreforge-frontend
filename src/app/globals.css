@@ -24,6 +24,12 @@
   --stroke-strong: #cbb99f;
   --foreground: #241d17;
   --muted-foreground: #6f6357;
+
+  /* Three washes layered over the flat background to give the page the mottled
+     quarried-stone look of the design, instead of one even fill. */
+  --stone-warm: rgba(255, 247, 233, 0.9);
+  --stone-cool: rgba(224, 210, 190, 0.55);
+  --stone-deep: rgba(196, 176, 148, 0.3);
 }
 
 .dark {
@@ -36,6 +42,10 @@
   --stroke-strong: #4a3d31;
   --foreground: #f3ece2;
   --muted-foreground: #a3968a;
+
+  --stone-warm: rgba(74, 47, 24, 0.55);
+  --stone-cool: rgba(31, 38, 48, 0.5);
+  --stone-deep: rgba(0, 0, 0, 0.8);
 }
 
 @theme inline {
@@ -79,27 +89,41 @@
 }
 
 body {
-  background: var(--background);
+  /* Fixed so the washes stay put while the page scrolls — the background reads
+     as a wall the content moves against, not as part of the document. */
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse 70% 55% at 15% -5%, var(--stone-warm), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 88% 10%, var(--stone-cool), transparent 60%),
+    radial-gradient(ellipse 120% 70% at 50% 115%, var(--stone-deep), transparent 70%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* A faint stone grain over the whole page. Pure CSS (an SVG turbulence data URI)
-   rather than an image asset, so it costs no request and scales to any viewport. */
+/* Stone texture over the whole page: fine grain for tooth, plus a much coarser
+   desaturated cloud that breaks the washes above into patches of light and
+   shade. Both are SVG turbulence data URIs rather than image assets, so they
+   cost no request and stay sharp at any viewport size. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23c)'/%3E%3C/svg%3E");
+  background-size:
+    200px 200px,
+    640px 640px;
 }
 
 .dark body::before {
-  opacity: 0.06;
+  opacity: 0.085;
 }
 
 ::selection {
