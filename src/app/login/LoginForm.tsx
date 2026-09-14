@@ -4,20 +4,15 @@ import { Suspense, useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowLeft, Lock, Mail, ShieldCheck, Sparkles, Swords } from "lucide-react";
+import { ArrowLeft, Lock, Mail } from "lucide-react";
 import { login as loginRequest } from "@/lib/api/auth";
 import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Alert } from "@/components/ui/Alert";
+import { AuthBackdrop } from "@/components/ui/AuthBackdrop";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-
-const HIGHLIGHTS = [
-  { icon: Swords, text: "100+ legendary items, ready to claim" },
-  { icon: ShieldCheck, text: "Token-secured checkout on every request" },
-  { icon: Sparkles, text: "Instant receipts, kept in your order history" },
-];
 
 function LoginFormContent() {
   const [email, setEmail] = useState("");
@@ -58,66 +53,30 @@ function LoginFormContent() {
   }
 
   return (
-    <main className="grid min-h-screen lg:grid-cols-2">
-      {/* Brand panel — hidden on small screens, where it would just push the form
-          below the fold. */}
-      <aside className="relative hidden flex-col justify-between overflow-hidden bg-stone-950 p-10 text-stone-100 lg:flex">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(249,115,22,0.35),transparent_55%),radial-gradient(circle_at_80%_75%,rgba(20,184,166,0.22),transparent_55%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.05] [background-image:repeating-linear-gradient(0deg,transparent,transparent_31px,white_31px,white_32px),repeating-linear-gradient(90deg,transparent,transparent_31px,white_31px,white_32px)]"
-        />
+    <main className="relative flex min-h-screen items-center justify-center px-4 py-16">
+      <AuthBackdrop />
 
-        <Link href="/" className="relative z-10 inline-flex w-fit">
-          <Logo tone="onDark" />
-        </Link>
-
-        <div className="relative z-10">
-          <h2 className="font-display text-4xl leading-tight font-bold">
-            Gear up.
-            <br />
-            The forge is open.
-          </h2>
-          <ul className="mt-8 space-y-4">
-            {HIGHLIGHTS.map(({ icon: Icon, text }) => (
-              <li key={text} className="flex items-center gap-3 text-sm text-stone-300">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10">
-                  <Icon className="h-4 w-4 text-brand-400" />
-                </span>
-                {text}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <p className="relative z-10 text-xs text-stone-500">
-          Loreforge — built for the Tamatem technical assessment.
-        </p>
-      </aside>
-
-      <div className="relative flex items-center justify-center px-4 py-12">
-        <div className="absolute top-4 right-4">
+      <div className="relative flex w-full max-w-md flex-col">
+        <div className="absolute -top-11 right-0">
           <ThemeToggle />
         </div>
+        <Link
+          href="/"
+          className="absolute -top-10 left-0 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to home
+        </Link>
 
-        <div className="w-full max-w-sm">
-          <Link
-            href="/"
-            className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground lg:hidden"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to home
-          </Link>
-
-          <div className="mb-8 flex justify-center lg:hidden">
+        <div className="rounded-2xl border border-stroke bg-surface/80 p-8 shadow-2xl shadow-black/20 backdrop-blur-xl dark:bg-surface/70 dark:shadow-black/60">
+          <div className="mb-7 flex justify-center">
             <Logo />
           </div>
 
-          <h1 className="font-display text-3xl font-bold tracking-tight">Welcome back</h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">
+          <h1 className="text-center font-display text-3xl font-bold tracking-tight">
+            Welcome back
+          </h1>
+          <p className="mt-1.5 text-center text-sm text-muted-foreground">
             Sign in to browse and buy game items.
           </p>
 
@@ -162,15 +121,32 @@ function LoginFormContent() {
 
             {error && <Alert variant="error">{error}</Alert>}
 
-            <Button type="submit" disabled={isSubmitting} size="lg" className="mt-2 w-full">
-              {isSubmitting ? "Signing in…" : "Sign in"}
-            </Button>
+            {/* Haloed, like the primary action in the rest of the app. */}
+            <div className="relative mt-2">
+              <span
+                aria-hidden="true"
+                className={`pointer-events-none absolute -inset-1 rounded-xl bg-brand-500/35 blur-lg transition-opacity ${
+                  isSubmitting ? "opacity-40" : ""
+                }`}
+              />
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                size="lg"
+                className="relative w-full ring-1 ring-brand-300/40"
+              >
+                {isSubmitting ? "Signing in…" : "Sign in"}
+              </Button>
+            </div>
           </form>
-
-          <p className="mt-6 text-center text-xs text-muted-foreground">
-            Need help? <Link href="/contact" className="underline hover:text-foreground">Contact support</Link>
-          </p>
         </div>
+
+        <p className="mt-6 text-center text-xs text-muted-foreground">
+          Need help?{" "}
+          <Link href="/contact" className="underline hover:text-foreground">
+            Contact support
+          </Link>
+        </p>
       </div>
     </main>
   );
