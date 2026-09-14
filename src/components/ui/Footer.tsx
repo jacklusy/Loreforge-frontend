@@ -82,8 +82,8 @@ export function Footer() {
         ))}
       </div>
 
-      <div className="border-t border-stroke px-4 py-5">
-        <p className="mx-auto max-w-6xl text-center text-xs text-muted-foreground sm:text-left">
+      <div className="border-t border-stroke">
+        <p className="mx-auto max-w-6xl px-4 py-5 text-center text-xs text-muted-foreground sm:text-left">
           Loreforge — built for the Tamatem technical assessment.
         </p>
       </div>

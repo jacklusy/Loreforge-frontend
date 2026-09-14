@@ -19,7 +19,7 @@ const FLOATING_ITEMS = [
 export function AuthBackdrop() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,var(--color-brand-500),transparent_45%),radial-gradient(circle_at_82%_72%,var(--color-accent-500),transparent_45%)] opacity-20 dark:opacity-30" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,var(--color-brand-500),transparent_45%),radial-gradient(circle_at_82%_72%,var(--color-accent-500),transparent_45%)] opacity-[0.13] dark:opacity-30" />
 
       {FLOATING_ITEMS.map(({ Icon, className }, index) => (
         <Icon
