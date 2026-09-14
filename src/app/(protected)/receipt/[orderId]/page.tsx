@@ -8,6 +8,7 @@ import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Alert } from "@/components/ui/Alert";
 import { ButtonLink } from "@/components/ui/ButtonLink";
+import { ItemArt } from "@/components/ui/ItemArt";
 import { Skeleton } from "@/components/ui/Skeleton";
 import type { Order } from "@/types/order";
 
@@ -67,13 +68,30 @@ export default function ReceiptPage({ params }: ReceiptPageProps) {
       <h1 className="mt-4 font-display text-3xl font-bold">Purchase complete</h1>
       <p className="mt-1 text-sm text-muted-foreground">Thanks for your order.</p>
 
-      <dl className="mt-8 w-full divide-y divide-stroke rounded-2xl border border-stroke bg-surface">
-        <Row label="Order ID" value={`#${order.id}`} />
-        <Row label="Item" value={order.product_title} />
-        <Row label="Price paid" value={`$${order.price_paid}`} />
-        <Row label="Location" value={order.location} />
-        <Row label="Date" value={new Date(order.created_at).toLocaleString()} />
-      </dl>
+      <div className="mt-8 w-full overflow-hidden rounded-2xl border border-stroke bg-surface">
+        {/* The item's own art, so the receipt shows what was bought rather than
+            naming it in a table row alone. */}
+        <div className="relative">
+          <ItemArt
+            title={order.product_title}
+            className="h-28 w-full"
+            sizes="448px"
+            iconClassName="h-10 w-10"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface to-transparent"
+          />
+        </div>
+
+        <dl className="divide-y divide-stroke">
+          <Row label="Order ID" value={`#${order.id}`} />
+          <Row label="Item" value={order.product_title} />
+          <Row label="Price paid" value={`$${order.price_paid}`} />
+          <Row label="Location" value={order.location} />
+          <Row label="Date" value={new Date(order.created_at).toLocaleString()} />
+        </dl>
+      </div>
 
       <ButtonLink href="/products" size="lg" className="mt-8 w-full">
         Continue shopping
