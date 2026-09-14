@@ -63,8 +63,11 @@ header instead of each page re-implementing the guard.
   `--surface`, `--stroke`, `--muted-foreground`, …) rather than raw color
   utilities everywhere, plus `brand` (a forge orange) and `accent` (a rune teal)
   color scales aliased from Tailwind's defaults — a deliberate two-color identity
-  instead of a single default blue. Dark mode follows `prefers-color-scheme`
-  automatically; there's no manual toggle to keep in sync.
+  instead of a single default blue. Light, dark and system are all selectable
+  from the header (`next-themes` writes a class on `<html>`, which the
+  `@custom-variant dark` rule keys off), and the page sits on a mottled stone
+  background built from fixed radial washes plus two SVG turbulence layers —
+  no image asset.
 - **Primitives** (`components/ui/`): `Button`/`ButtonLink`, `Card`, `Badge`,
   `Alert`, `Skeleton`, `Pagination`, `Logo` — every page composes these instead of
   ad-hoc Tailwind classes, so spacing, radii, and color usage stay consistent
@@ -73,10 +76,17 @@ header instead of each page re-implementing the guard.
   The favicon (`app/icon.png`, 64×64) and iOS home-screen icon (`app/apple-icon.png`,
   180×180) are rendered from the same source design at their own native
   resolution, rather than the browser scaling down one oversized file.
-- **Icons**: `lucide-react`. Product cards get a keyword-matched icon and gradient
-  per title (`lib/product-visuals.ts`) instead of a generic placeholder — there
-  are no real product images in the dataset, so this gives each card a distinct,
-  intentional look with a stable hash-based fallback for unrecognized titles.
+- **Icons**: `lucide-react`, plus four social brand marks drawn locally
+  (`components/ui/BrandIcons.tsx`) — lucide dropped its brand icons, and pulling
+  in a second icon library for four glyphs wasn't worth the weight.
+- **Item artwork**: the dataset ships no images, so `ItemArt` composes a lit
+  stone niche per item — a keyword-matched glyph, gradient, glow and frame tint
+  (`lib/product-visuals.ts`), with a stable hash-based fallback for unrecognized
+  titles. Real artwork drops in without touching a component: save
+  `public/items/<slug>.jpg` and list the slug in `lib/item-images.ts`, and the
+  painting replaces the generated plate on cards, the detail panel, order rows
+  and receipts at once. The slug list is explicit rather than probed at render
+  time so a missing file never costs a 404 per card.
 
 ## Design decisions & assumptions
 
