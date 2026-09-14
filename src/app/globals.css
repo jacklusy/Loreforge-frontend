@@ -138,3 +138,24 @@ body::before {
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* Printing (e.g. the receipt page's "Print receipt" button): the decorative
+   stone texture and colour washes are for screen only — on paper they just
+   waste ink and can fight with dark mode's near-black page background, since
+   print doesn't stop `.dark` from being applied. Individual pieces of app
+   chrome (header, nav, footer) hide themselves via `print:hidden`. */
+@media print {
+  body {
+    background: #fff;
+    color: #1c1917;
+  }
+  body::before {
+    display: none;
+  }
+  /* The toast container is a portal straight onto <body>, outside any
+     component tree a `print:hidden` class could reach — targeted here by the
+     data attribute sonner itself renders. */
+  [data-sonner-toaster] {
+    display: none !important;
+  }
+}

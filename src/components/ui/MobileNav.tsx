@@ -45,7 +45,7 @@ export function MobileNav({ open, onClose, links, pathname, onLogout }: MobileNa
       <div
         onClick={onClose}
         aria-hidden="true"
-        className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity sm:hidden ${
+        className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity sm:hidden print:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
@@ -55,7 +55,7 @@ export function MobileNav({ open, onClose, links, pathname, onLogout }: MobileNa
         aria-modal="true"
         aria-label="Menu"
         aria-hidden={!open}
-        className={`fixed inset-y-0 right-0 z-50 flex w-72 max-w-[85vw] flex-col border-l border-stroke bg-surface-raised transition-transform duration-200 ease-out sm:hidden ${
+        className={`fixed inset-y-0 right-0 z-50 flex w-72 max-w-[85vw] flex-col border-l border-stroke bg-surface-raised transition-transform duration-200 ease-out sm:hidden print:hidden ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
