@@ -38,15 +38,18 @@ export function ItemArt({
         <Image src={painting} alt="" fill sizes={sizes} className="object-cover" />
       ) : (
         <>
-          {/* Rough stone courses behind the item — wide, low-contrast bands, not
-              a grid, so it reads as a wall rather than graph paper. */}
+          {/* The gradient is a colour cast, not the subject: knocked back so the
+              plate stays as dark and moody as the reference art. */}
+          <div aria-hidden="true" className="absolute inset-0 bg-stone-950/45" />
+
+          {/* Light falling from above onto the back wall of the niche. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 opacity-[0.05] [background-image:repeating-linear-gradient(0deg,transparent,transparent_38px,white_38px,white_39px),repeating-linear-gradient(90deg,transparent,transparent_62px,white_62px,white_63px)]"
+            className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(255,255,255,0.12),transparent_70%)]"
           />
 
-          {/* Ember glow, offset low so the light appears to come from a forge
-              at floor level the way it does in the reference art. */}
+          {/* Ember glow, low, so the item reads as lit by a forge at floor level
+              the way it is in the reference art. */}
           <div
             aria-hidden="true"
             className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 rounded-full blur-3xl ${glow} ${
@@ -54,25 +57,15 @@ export function ItemArt({
             }`}
           />
 
-          {/* Oversized ghost of the glyph, for depth behind the crisp one. */}
+          {/* Pool of light the item stands in. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 flex items-center justify-center"
-          >
-            <Icon
-              className={`text-white opacity-[0.055] blur-[1px] ${feature ? "h-72 w-72" : "h-40 w-40"}`}
-            />
-          </div>
-
-          {/* Pool of light on the ground the item stands in. */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-[15%] bottom-[8%] h-[14%] rounded-[50%] bg-white/15 blur-xl"
+            className="absolute inset-x-[18%] bottom-[9%] h-[12%] rounded-[50%] bg-white/12 blur-xl"
           />
 
           <div className="relative flex h-full w-full items-center justify-center">
             <Icon
-              className={`text-white/90 drop-shadow-[0_6px_16px_rgba(0,0,0,0.75)] ${
+              className={`text-white/95 drop-shadow-[0_8px_20px_rgba(0,0,0,0.85)] ${
                 iconClassName ?? (feature ? "h-28 w-28" : "h-14 w-14")
               }`}
             />
@@ -80,18 +73,20 @@ export function ItemArt({
         </>
       )}
 
-      {/* Vignette and frame sit above either treatment, so a dropped-in painting
-          picks up the same lighting and border as the generated plates. */}
+      {/* Vignette sits above either treatment, so a dropped-in painting picks up
+          the same lighting as the generated plates. The inner frame line is kept
+          for the feature panel only — on a card it would draw a hard rectangle
+          across artwork that is meant to bleed into the text. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.6)_100%)]"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.65)_100%)]"
       />
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none absolute rounded-lg ring-1 ${frame} ${
-          feature ? "inset-3 rounded-xl" : "inset-2"
-        }`}
-      />
+      {feature && (
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-3 rounded-xl ring-1 ${frame}`}
+        />
+      )}
     </div>
   );
 }
